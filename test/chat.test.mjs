@@ -84,6 +84,42 @@ test('streaming preserves chunks, reasoning and final usage', async () => {
   assert.match(text, /total_tokens/)
   assert.equal(text.match(/\[DONE\]/g)?.length, 1)
 })
+test('wrapped DONE ends the model stream before trailing transport timings', async t => {
+  const done = `data: ${JSON.stringify({ headers: {}, body: '[DONE]', statusCodeValue: 200, statusCode: 'OK' })}\n\n`
+  const timings = `data: ${JSON.stringify({ firstTokenDuration: 12, serverDuration: 40, totalDuration: 45 })}\n\n`
+  const content = encode(part({ content: 'OK' })) + encode(part({}, 'stop'))
+    + encode({ choices: [], usage: { prompt_tokens: 3, completion_tokens: 1 } }) + done + timings
+  for (const stream of [false, true]) await t.test(stream ? 'streaming' : 'non-streaming', async () => {
+    const { hooks } = fixture(content)
+    const response = await request(hooks, { stream })
+    assert.equal(response.status, 200)
+    if (stream) {
+      const text = await response.text()
+      assert.match(text, /OK/)
+      assert.doesNotMatch(text, /upstream_error|firstTokenDuration/)
+      assert.equal(text.match(/\[DONE\]/g)?.length, 1)
+    } else {
+      const body = await response.json()
+      assert.equal(body.choices[0].message.content, 'OK')
+      assert.equal(body.usage.completion_tokens, 1)
+    }
+  })
+})
+test('wrapped DONE cannot turn an unfinished reply into a success', async () => {
+  const done = `data: ${JSON.stringify({ statusCodeValue: 200, body: '[DONE]' })}\n\n`
+  const { hooks } = fixture(encode(part({ content: 'unfinished' })) + done)
+  const response = await request(hooks, { stream: false })
+  assert.equal(response.status, 502)
+  assert.match((await response.json()).error.message, /未返回完成标记/)
+})
+test('an error before wrapped DONE is still returned after a finish chunk', async () => {
+  const done = `data: ${JSON.stringify({ statusCodeValue: 200, body: '[DONE]' })}\n\n`
+  const { hooks } = fixture(encode(part({ content: 'text' })) + encode(part({}, 'stop'))
+    + encode({ code: 500, message: 'upstream accounting failed' }) + done)
+  const response = await request(hooks, { stream: false })
+  assert.equal(response.status, 500)
+  assert.match((await response.json()).error.message, /upstream accounting failed/)
+})
 test('UTF-8 and CRLF split across individual upstream bytes survive decoding', async () => {
   const bytes = new TextEncoder().encode(encode(part({ content: '中文🙂' })) + encode(part({}, 'stop')) + 'data: [DONE]\n\n')
   const hooks = createHooks({}, { runtimeProvider: () => runtime, signer: async () => ({ url: 'https://gateway.qwenwork.cn/algo/api/v2/service/pro/sse/agent_chat_generation', headers: {}, body: 'fake' }), fetchImpl: async () => new Response(new ReadableStream({ start(controller) { for (const byte of bytes) controller.enqueue(new Uint8Array([byte])); controller.close() } })) })

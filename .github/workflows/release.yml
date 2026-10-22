@@ -29,9 +29,13 @@ jobs:
           flags=()
           if [[ "$version" == *-* ]]; then flags+=(--prerelease); fi
           cat > /tmp/release-notes.txt <<'NOTES'
-          下载 ZIP 后解压，macOS 双击“安装到Magpie.command”；Windows/Linux 使用包内安装脚本。使用前请安装千问办公官方 App。
+          推荐无需终端的安装：Magpie → 插件 → 发现，在插件来源输入框粘贴 `github:tianyn1990/magpie-qwenwork-auth#release`，点击「安装」。以后在「已安装」里检查更新并点击「更新」。使用前请安装千问办公官方 App。
 
-          本版本为 beta：已验证离线协议和本机签名组件，尚未完成真实账号授权、推理及积分扣减验收。安装器不自动登录或选择现有路由。插件采用浏览器独立授权，不读取 App 登录令牌；包内不包含厂商 WASM 或账号配置。
+          也可以下载 ZIP 解压，在同一界面点击文件夹图标，选择插件根目录后安装。文件夹需要长期保留；希望界面检查更新时，请使用上面的 GitHub 来源。包内脚本作为可选安装方式保留。
+
+          修复回答完成后误报「千问办公响应缺少 choices 或 usage」：正确识别信封内的 `[DONE]`，不把后续耗时统计当作模型事件。升级不需要重新授权，请在正在生成的请求结束后替换插件。
+
+          本版本为 beta：已通过现有授权账号的真实基础档回答、高级档流式工具调用和结果回传；首次浏览器授权、刷新、扣分金额及完整 Codex 会话仍待验收。安装器不自动登录或选择现有路由。插件不读取 App 登录令牌；包内不包含厂商 WASM 或账号配置。
 
           校验包请使用 SHA256SUMS；验证范围见 release-manifest.json。安装、升级及回滚步骤见 README。
           NOTES

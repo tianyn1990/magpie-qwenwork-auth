@@ -1,6 +1,6 @@
 {
   "name": "magpie-qwenwork-auth",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2",
   "description": "Independent QwenWork account provider for Magpie. Uses your own office credits.",
   "type": "module",
   "main": "./index.mjs",
