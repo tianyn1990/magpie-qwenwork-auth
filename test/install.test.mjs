@@ -48,7 +48,10 @@ test('Windows installer registers only the isolated target', { skip: process.pla
     assert.equal(result.status, 0, result.stderr + result.stdout)
     const args = JSON.parse(fs.readFileSync(log, 'utf8').replace(/^\uFEFF/, ''))
     assert.deepEqual(args.slice(0, 2), ['plugin', 'add'])
-    assert.equal(fs.realpathSync(args[2]), fs.realpathSync(target))
+    const registered = fs.statSync(args[2], { bigint: true })
+    const intended = fs.statSync(target, { bigint: true })
+    assert.equal(registered.dev, intended.dev)
+    assert.equal(registered.ino, intended.ino)
     assert.ok(fs.existsSync(path.join(target, 'lib/plugin.mjs')))
   } finally { fs.rmSync(dir, { recursive: true, force: true }) }
 })
