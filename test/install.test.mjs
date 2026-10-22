@@ -47,7 +47,8 @@ test('Windows installer registers only the isolated target', { skip: process.pla
     const result = spawnSync('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(root, 'install.ps1'), '-MagpieBin', fake, '-InstallDir', target], { env: { ...process.env, QWENWORK_TEST_ARGS_LOG: log }, encoding: 'utf8' })
     assert.equal(result.status, 0, result.stderr + result.stdout)
     const args = JSON.parse(fs.readFileSync(log, 'utf8').replace(/^\uFEFF/, ''))
-    assert.deepEqual(args, ['plugin', 'add', target])
+    assert.deepEqual(args.slice(0, 2), ['plugin', 'add'])
+    assert.equal(fs.realpathSync(args[2]), fs.realpathSync(target))
     assert.ok(fs.existsSync(path.join(target, 'lib/plugin.mjs')))
   } finally { fs.rmSync(dir, { recursive: true, force: true }) }
 })
