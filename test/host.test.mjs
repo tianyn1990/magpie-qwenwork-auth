@@ -42,6 +42,7 @@ test('isolated Magpie host discovers provider, loader and local model catalog', 
     assert.equal(provider.signedIn, true)
     assert.equal(provider.usage, true)
     assert.equal(provider.maxConcurrency, 2)
+    assert.match(provider.icon, /^data:image\/svg\+xml;base64,/)
     const { result: loaded } = await call('load', { provider: provider.id })
     assert.equal(loaded.fetch, true)
     const fetched = await call('fetch', { provider: provider.id, model: 'qwork-auto', npm: '@ai-sdk/openai-compatible', url: 'https://gateway.qwenwork.cn/v1/models', method: 'GET', window: 65536 })

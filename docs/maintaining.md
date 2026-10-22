@@ -15,7 +15,7 @@
 3. 检查 `dist/SHA256SUMS` 和 ZIP/TGZ 内容，确保没有 WASM、凭据、缓存或本机路径。
 4. 提交并推送；为该提交创建 `v<package.json version>` 标签并推送。
 5. Release 工作流检查标签一致性、重新测试并构建。包含连字符的版本自动标为预发行。
-6. 确认该提交的 CI 和 Release 工作流均成功、附件可下载后，将远端 `release` 分支快进到这个版本提交。Magpie 的图形安装来源 `github:tianyn1990/magpie-qwenwork-auth#release` 跟踪此分支；不要把它指到未发布或检查失败的提交。
+6. 确认该提交的 CI 和 Release 工作流均成功、附件可下载后，将远端 `release` 分支快进到这个版本提交。Magpie 的图形安装来源 `github:tianyn1990/qwenwork-magpie#release` 跟踪此分支；不要把它指到未发布或检查失败的提交。
 
 Release 中包含：
 

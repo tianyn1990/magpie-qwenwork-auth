@@ -28,7 +28,7 @@ New-Item -ItemType Directory -Force -Path $parent | Out-Null
 $stage = Join-Path $parent ('.qwenwork-install-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $stage | Out-Null
 try {
-  foreach ($file in @('index.mjs', 'lib', 'package.json', $marker, 'README.md', 'CHANGELOG.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs')) {
+  foreach ($file in @('index.mjs', 'lib', 'assets', 'package.json', $marker, 'README.md', 'CHANGELOG.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs')) {
     Copy-Item -Recurse -LiteralPath (Join-Path $PSScriptRoot $file) -Destination $stage
   }
   New-Item -ItemType Directory -Path (Join-Path $stage 'scripts') | Out-Null

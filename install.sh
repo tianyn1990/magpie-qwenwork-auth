@@ -17,7 +17,7 @@ if [ -e "$qw_previous" ] && [ ! -f "$qw_previous/$qw_marker" ]; then echo 'Unrec
 mkdir -p -- "$(dirname -- "$qw_target")"
 qw_stage=$(mktemp -d "$(dirname -- "$qw_target")/.qwenwork-install.XXXXXX")
 trap 'if [ -n "$qw_stage" ] && [ -d "$qw_stage" ]; then rm -rf -- "$qw_stage"; fi' EXIT HUP INT TERM
-for qw_file in index.mjs lib package.json "$qw_marker" README.md CHANGELOG.md LICENSE THIRD_PARTY_NOTICES.md docs; do
+for qw_file in index.mjs lib assets package.json "$qw_marker" README.md CHANGELOG.md LICENSE THIRD_PARTY_NOTICES.md docs; do
   cp -R -- "$qw_source/$qw_file" "$qw_stage/"
 done
 mkdir -p -- "$qw_stage/scripts"

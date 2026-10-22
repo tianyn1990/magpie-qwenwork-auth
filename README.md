@@ -1,8 +1,10 @@
-# Magpie 千问办公独立插件
+<img src="assets/icon.svg" width="64" height="64" alt="QwenWork for Magpie" />
+
+# QwenWork for Magpie · 千问办公
 
 让 Magpie 使用你自己的千问办公账号与办公积分。供应商标识为 `qwenwork-community`，可以单独安装、升级和卸载。
 
-**当前为 beta。** 已用现有插件授权完成真实基础档回答、高级档流式工具调用和工具结果回传，并通过协议测试及本机签名组件验证。beta.2 修复了 beta.1 在回答完成后误报「响应缺少 choices 或 usage」的问题。首次登录流程、刷新、积分扣减金额及跨供应商旧会话仍未完整验收，请先用新会话测试。
+**首个正式版 0.1.0。** 用已有办公积分接入 Codex：浏览器独立授权，支持工具调用和 Magpie 自动备用。已验证基础档真实回答、高级档流式工具往返，以及 **Codex CLI → Magpie Responses 转换 → 本插件 → 千问办公** 的完整请求。真实令牌过期刷新、扣分金额、所有工具及旧会话切换的覆盖范围见[兼容性说明](docs/compatibility.md)。
 
 ## 在 Magpie 界面安装（推荐，无需终端）
 
@@ -12,20 +14,20 @@
 2. 在「npm 包名、GitHub 仓库或本机文件夹」输入框粘贴：
 
    ```text
-   github:tianyn1990/magpie-qwenwork-auth#release
+   github:tianyn1990/qwenwork-magpie#release
    ```
 
 3. 点击旁边的 **安装**，等插件出现在 **已安装** 列表。
 4. 到 **供应商 → 来自插件 → 千问办公（社区独立插件）**，点击 **浏览器登录千问办公（独立授权）**。
 5. 完成授权，核对账号及积分；先在新会话测试模型和工具，再加入日常备用链。
 
-这里粘贴的是插件来源地址，不是终端命令。`release` 分支仅在该版本通过 CI 并发布后推进；当前为 beta.2。以后打开 **插件 → 已安装 → 检查更新**，有新版时点击 **更新**，无需再运行安装脚本。安装和更新会重载插件宿主，请等正在生成的请求结束后操作。
+这里粘贴的是插件来源地址，不是终端命令。`release` 分支仅在该版本通过 CI 并发布后推进；当前为 0.1.0。以后打开 **插件 → 已安装 → 检查更新**，有新版时点击 **更新**，无需再运行安装脚本。安装和更新会重载插件宿主，请等正在生成的请求结束后操作。
 
 本仓库带有 `magpie-plugin` 标签，Magpie 的发现页也可能直接展示它；列表受 GitHub 索引和 Magpie 缓存影响，找不到时用上面的来源输入框即可。
 
 ## 下载 ZIP 后从界面安装
 
-1. 在 [Releases](https://github.com/tianyn1990/magpie-qwenwork-auth/releases) 下载 ZIP 附件并解压。
+1. 在 [Releases](https://github.com/tianyn1990/qwenwork-magpie/releases) 下载 ZIP 附件并解压。
 2. 把解压后的文件夹放到准备长期保留的位置。
 3. 打开 **Magpie → 插件 → 发现**，点击来源输入框旁的 **文件夹图标**，选择解压后的插件根目录（其中有 `package.json` 和 `index.mjs`），再点 **安装**。
 4. 到供应商页面给插件单独授权。
@@ -36,7 +38,7 @@
 
 需要已经安装 Magpie 和千问办公官方桌面 App。插件自动读取 App 随附的签名组件，**不读取、解密或复制 App 登录令牌**。不包含厂商 WASM；首次使用仍需要为插件单独授权。
 
-1. 在 [Releases](https://github.com/tianyn1990/magpie-qwenwork-auth/releases) 下载最新版本的 `.zip` 并解压。不是 GitHub 自动生成的 Source code 包。
+1. 在 [Releases](https://github.com/tianyn1990/qwenwork-magpie/releases) 下载最新版本的 `.zip` 并解压。不是 GitHub 自动生成的 Source code 包。
 2. macOS/Linux 在解压目录的终端运行 `sh install.sh`；macOS 也可以双击 `安装到Magpie.command`。若系统不允许打开 `.command`，直接使用前面的终端命令，无需关闭系统安全功能。Windows 在 PowerShell 中运行 `powershell -ExecutionPolicy Bypass -File .\install.ps1`。
 3. 打开 Magpie 的插件列表，找到本插件；在供应商的「来自插件」入口选择「千问办公（社区独立插件）」，点击浏览器登录。
 4. 登录自己的账号。首次授权可能唤起千问办公 App；插件使用自己生成的 PKCE、nonce 和设备标识收取本次授权，不读取 App 的已有登录文件。
@@ -47,7 +49,7 @@
 也可以从 GitHub 安装指定版本（不需要自行编译）：
 
 ```sh
-magpie plugin add github:tianyn1990/magpie-qwenwork-auth#v0.1.0-beta.2
+magpie plugin add github:tianyn1990/qwenwork-magpie#v0.1.0
 ```
 
 GitHub 安装与解压安装二选一，避免同时安装两份提供同一供应商的插件。首次添加插件时 Magpie 可能自动准备它使用的 Bun 运行时；使用者无需安装 Node.js 或开发工具。
@@ -106,4 +108,4 @@ npm run release:pack
 
 版本以 `package.json`、Git 标签和 Release 为准；推送匹配的 `v*` 标签会自动测试、打包并发布 ZIP、npm TGZ、SHA-256 校验文件和发布清单。beta 标签发布为预发行版本。[更新记录](CHANGELOG.md) · [第三方说明](THIRD_PARTY_NOTICES.md)
 
-本项目是独立社区适配，与 Magpie、千问办公官方没有隶属关系。
+本项目是独立社区适配，与 Magpie、千问办公官方没有隶属关系。绿色 Q 图标是本项目原创的社区标识，不是千问办公官方图标。仓库原名 `magpie-qwenwork-auth`，旧 GitHub 地址会重定向到新地址；安装包名和供应商标识仍保留，账号不因仓库改名迁移。

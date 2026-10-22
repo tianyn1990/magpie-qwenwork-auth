@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>QwenWork for Magpie</title>
+  <rect width="64" height="64" rx="16" fill="#0B9F6E"/>
+  <circle cx="29" cy="29" r="14" fill="none" stroke="#FFFFFF" stroke-width="7"/>
+  <path d="m38 38 11 11" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-width="7"/>
+</svg>
