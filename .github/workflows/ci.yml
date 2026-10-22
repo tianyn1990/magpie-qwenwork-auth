@@ -1,0 +1,38 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
+      - run: npm run check
+      - if: runner.os == 'Linux'
+        run: npm run release:pack
+  magpie-host:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.3'
+      - name: Fetch the pinned official plugin host
+        run: curl -fsSL --retry 2 https://raw.githubusercontent.com/yetone/magpie/2374ffe161439b02a8e7f23b793461b39a635bf8/internal/plugin/host.js -o "$RUNNER_TEMP/magpie-host.js"
+      - name: Load the plugin in an isolated host
+        shell: bash
+        run: MAGPIE_TEST_HOST="$RUNNER_TEMP/magpie-host.js" MAGPIE_TEST_BUN="$(command -v bun)" node --test test/host.test.mjs

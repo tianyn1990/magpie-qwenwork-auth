@@ -1,0 +1,24 @@
+{
+  "name": "magpie-qwenwork-auth",
+  "version": "0.1.0-beta.1",
+  "description": "Independent QwenWork account provider for Magpie. Uses your own office credits.",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": "./index.mjs",
+  "engines": { "node": ">=22" },
+  "license": "MIT",
+  "author": "tianyn1990",
+  "repository": { "type": "git", "url": "https://github.com/tianyn1990/magpie-qwenwork-auth.git" },
+  "homepage": "https://github.com/tianyn1990/magpie-qwenwork-auth#readme",
+  "bugs": "https://github.com/tianyn1990/magpie-qwenwork-auth/issues",
+  "keywords": ["magpie-plugin", "opencode-plugin", "qwenwork", "oauth"],
+  "files": ["index.mjs", "lib/", "scripts/diagnose.mjs", "install.sh", "install.ps1", "安装到Magpie.command", ".managed-by-magpie-qwenwork-auth", "README.md", "CHANGELOG.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "docs/"],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "diagnose": "node scripts/diagnose.mjs",
+    "release:pack": "node scripts/package.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "magpie": { "maxConcurrency": 2 },
+  "publishConfig": { "access": "public" }
+}

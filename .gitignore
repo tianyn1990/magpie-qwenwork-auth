@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.sandbox/
+.env*
+*.log
+*.wasm
+*auth*.json
+!package.json
+!test/fixtures/*.json
+.DS_Store

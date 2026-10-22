@@ -1,0 +1,38 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
+      - run: npm run check
+      - run: npm run release:pack
+      - name: Publish versioned assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(node -p 'JSON.parse(require("fs").readFileSync("package.json")).version')
+          tag="v$version"
+          test "$GITHUB_REF_TYPE" = tag
+          test "$GITHUB_REF_NAME" = "$tag"
+          flags=()
+          if [[ "$version" == *-* ]]; then flags+=(--prerelease); fi
+          cat > /tmp/release-notes.txt <<'NOTES'
+          下载 ZIP 后解压，macOS 双击“安装到Magpie.command”；Windows/Linux 使用包内安装脚本。使用前请安装千问办公官方 App。
+
+          本版本为 beta：已验证离线协议和本机签名组件，尚未完成真实账号授权、推理及积分扣减验收。安装器不自动登录或选择现有路由。插件采用浏览器独立授权，不读取 App 登录令牌；包内不包含厂商 WASM 或账号配置。
+
+          校验包请使用 SHA256SUMS；验证范围见 release-manifest.json。安装、升级及回滚步骤见 README。
+          NOTES
+          gh release create "$tag" dist/* --verify-tag --title "$tag · 千问办公独立插件" --notes-file /tmp/release-notes.txt "${flags[@]}"
